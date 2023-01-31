@@ -7,7 +7,7 @@ export default function SignUp() {
 
         <div>
           <label htmlFor="signup_full_name">Full Name</label>
-          <input type="text" id="signup_email" required />
+          <input type="text" id="signup_full_name" required />
         </div>
 
         <div>
