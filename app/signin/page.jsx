@@ -49,7 +49,7 @@ export default function SignIn() {
           />
         </div>
 
-        <button type="submit">Sign up</button>
+        <button type="submit">Sign in</button>
 
       </form>
 
