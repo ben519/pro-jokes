@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../firebase/firebase'
 
 
 export default function SignIn() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     'email': '',
     'password': ''
@@ -37,9 +39,8 @@ export default function SignIn() {
         // Clear any existing error messages
         setErrorMsg('');
 
-        // Grab the user
-        const user = userCredential.user;
-        console.log("user", user);
+        // Redirect to home page
+        router.push('/');
       })
       .catch((error) => {
 
