@@ -1,13 +1,15 @@
 'use client';
 
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { auth } from "@/firebase/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 
 export default function Navbar() {
     const [user, setUser] = useState(undefined);
+    const router = useRouter();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -27,12 +29,30 @@ export default function Navbar() {
         return unsubscribe;
     }, []);
 
+    function handleSignOut(event) {
+        // Prevent page redirect
+        event.preventDefault();
+
+        // Sign the user out
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            router.push('/signin');
+        }).catch((error) => {
+            // An error happened.
+        });
+    }
+
     return (
         <nav>
             <Link href="/">Home</Link>
             { !user && <>&nbsp;| <Link href="/signup">Sign up</Link></> }
             { !user && <>&nbsp;| <Link href="/signin">Sign in</Link></> }
-            { user && <>&nbsp;| <Link href="#">Sign out</Link></> }
+            { user && <>
+                &nbsp;|
+                <Link href="/signin" onClick={ e => handleSignOut(e) }>
+                    Sign out
+                </Link>
+            </> }
             { user && <>&nbsp;| { user.email }</> }
         </nav>
     )
