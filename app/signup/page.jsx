@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../../firebase/firebase'
+
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -9,6 +12,7 @@ export default function SignUp() {
     'password': '',
     'confirmPassword': '',
   });
+  const [errorMsg, setErrorMsg] = useState('');
 
   function onChangeHandler(event) {
     const key = event.target.name;
@@ -21,11 +25,45 @@ export default function SignUp() {
     ))
   }
 
+  function submitHandler(event) {
+    console.log("=== submitHandler() invoked ============");
+
+    // Prevent page refresh
+    event.preventDefault();
+
+    // Validate password consistency
+    if (formData.password !== formData.confirmPassword){
+      setErrorMsg("Password fields don't match");
+      return;
+   }
+
+    // Create new user
+    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+        // Signed in
+
+        // Clear any existing error messages
+        setErrorMsg('');
+
+        // Grab the user
+        const user = userCredential.user;
+        console.log("user", user);
+      })
+      .catch((error) => {
+        
+        // Update errorMsg
+        setErrorMsg(error.message);
+      });
+  }
+
   return (
     <main>
       <h1>Sign up</h1>
 
-      <form id="signup_form">
+      <form
+        id="signup_form"
+        onSubmit={ submitHandler }
+      >
 
         <div>
           <label htmlFor="signup_full_name">Full Name</label>
@@ -74,6 +112,9 @@ export default function SignUp() {
             onChange={ onChangeHandler }
           />
         </div>
+
+        {/* display error message if an error exists */}
+        {errorMsg && <p style={{color: "red"}}>{errorMsg}</p>}
 
         <button type="submit">Sign up</button>
 
