@@ -15,7 +15,7 @@ export default function SignIn() {
           <input type="password" id="signin_password" required />
         </div>
 
-        <button type="submit">Sign up</button>
+        <button type="submit">Sign in</button>
 
       </form>
 
