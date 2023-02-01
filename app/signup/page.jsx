@@ -25,8 +25,8 @@ export default function SignUp() {
     ))
   }
 
-  function submitHandler(event) {
-    console.log("=== submitHandler() invoked ============");
+  function onSubmitHandler(event) {
+    console.log("=== onSubmitHandler() invoked ============");
 
     // Prevent page refresh
     event.preventDefault();
@@ -62,7 +62,7 @@ export default function SignUp() {
 
       <form
         id="signup_form"
-        onSubmit={ submitHandler }
+        onSubmit={ onSubmitHandler }
       >
 
         <div>
