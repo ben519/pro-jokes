@@ -3,8 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup } from "firebase/auth";
-import { auth, provider } from '../../firebase/firebase'
+import { doc, setDoc } from "firebase/firestore"; 
+import { auth, provider, db } from '../../firebase/firebase'
 
+
+// Helper function to save a document in the users collection
+async function saveFullName(uid, name) {
+  try {
+    const docRef = await setDoc(doc(db, "users", uid), { fullName: name });
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
 
 export default function SignUp() {
   const router = useRouter();
@@ -42,7 +52,11 @@ export default function SignUp() {
     // Create new user with email and password
     createUserWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
+        console.log(userCredential);
         // Signed in
+
+        // Save the user document
+        saveFullName(userCredential.user.uid, formData.fullName);
 
         // Clear any existing error messages
         setErrorMsg('');
@@ -55,7 +69,8 @@ export default function SignUp() {
             // Redirect to home page
             router.push('/');
           })
-          .error((error) => {
+          .catch((error) => {
+
             // Update errorMsg
             setErrorMsg(error.message);
           });
@@ -69,8 +84,18 @@ export default function SignUp() {
 
   // Sign up with google
   function googleSignUpHandler() {
+
+    // Validate that the user entered their name
+    if (!formData.fullName) {
+      setErrorMsg("Enter your full name");
+      return;
+    }
+
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then((userCredential) => {
+
+        // Save the user document
+        saveFullName(userCredential.user.uid, formData.fullName);
 
         // Redirect to home page
         router.push('/');

@@ -1,15 +1,30 @@
 'use client';
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
-import { auth } from "@/firebase/firebase";
+import { auth, db } from "../firebase/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
 
 
 export default function Navbar() {
-    const [user, setUser] = useState(undefined);
     const router = useRouter();
+    const [user, setUser] = useState(undefined);
+    const [fullName, setFullName] = useState('');
+
+    // Lookup a user's full name based on their uid
+    async function getFullName(uid) {
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data());
+            setFullName(docSnap.data().fullName);
+        } else {
+            console.log("No such document!");
+        }
+    }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -19,6 +34,9 @@ export default function Navbar() {
                 // User signed in
                 console.log("currentUser", currentUser)
                 setUser(currentUser);
+
+                // Update fullName
+                getFullName(currentUser.uid);
             } else {
                 // User signed out
                 setUser(undefined);
@@ -48,12 +66,12 @@ export default function Navbar() {
             { !user && <>&nbsp;| <Link href="/signup">Sign up</Link></> }
             { !user && <>&nbsp;| <Link href="/signin">Sign in</Link></> }
             { user && <>
-                &nbsp;|
+                &nbsp;|&nbsp;
                 <Link href="/signin" onClick={ e => handleSignOut(e) }>
                     Sign out
                 </Link>
             </> }
-            { user && <>&nbsp;| { user.email }</> }
+            { user && <>&nbsp;| { fullName }</> }
         </nav>
     )
 }
