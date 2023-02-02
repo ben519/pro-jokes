@@ -3,9 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../../firebase/firebase'
-
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, provider } from '../../firebase/firebase';
 
 export default function SignIn() {
   const router = useRouter();
@@ -50,6 +49,20 @@ export default function SignIn() {
       });
   }
 
+  // Sign in with google
+  function googleSignInHandler() {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+
+        // Redirect to home page
+        router.push('/');
+      }).catch((error) => {
+
+        // Update errorMsg
+        setErrorMsg(error.message);
+      });
+  }
+
   return (
     <main>
       <h1>Sign in</h1>
@@ -86,14 +99,14 @@ export default function SignIn() {
           <Link href="/resetpassword">Forgot your password?</Link>
         </div>
 
-        {/* display error message if an error exists */}
-        {errorMsg && <p style={{color: "red"}}>{errorMsg}</p>}
+        {/* display error message if an error exists */ }
+        { errorMsg && <p style={ { color: "red" } }>{ errorMsg }</p> }
 
         <button type="submit">Sign in</button>
 
       </form>
 
-      <button>Sign in with Google</button>
+      <button onClick={ googleSignInHandler }>Sign in with Google</button>
 
     </main>
   )

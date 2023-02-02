@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../../firebase/firebase'
+import { useRouter } from "next/navigation";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, provider } from '../../firebase/firebase'
 
 
 export default function SignUp() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     'fullName': '',
     'email': '',
@@ -32,12 +34,12 @@ export default function SignUp() {
     event.preventDefault();
 
     // Validate password consistency
-    if (formData.password !== formData.confirmPassword){
+    if (formData.password !== formData.confirmPassword) {
       setErrorMsg("Password fields don't match");
       return;
-   }
+    }
 
-    // Create new user
+    // Create new user with email and password
     createUserWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
         // Signed in
@@ -45,12 +47,25 @@ export default function SignUp() {
         // Clear any existing error messages
         setErrorMsg('');
 
-        // Grab the user
-        const user = userCredential.user;
-        console.log("user", user);
+        // Redirect to home page
+        router.push('/');
       })
       .catch((error) => {
-        
+
+        // Update errorMsg
+        setErrorMsg(error.message);
+      });
+  }
+
+  // Sign up with google
+  function googleSignUpHandler() {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+
+        // Redirect to home page
+        router.push('/');
+      }).catch((error) => {
+
         // Update errorMsg
         setErrorMsg(error.message);
       });
@@ -113,14 +128,14 @@ export default function SignUp() {
           />
         </div>
 
-        {/* display error message if an error exists */}
-        {errorMsg && <p style={{color: "red"}}>{errorMsg}</p>}
+        {/* display error message if an error exists */ }
+        { errorMsg && <p style={ { color: "red" } }>{ errorMsg }</p> }
 
         <button type="submit">Sign up</button>
 
       </form>
 
-      <button>Sign up with Google</button>
+      <button onClick={ googleSignUpHandler }>Sign up with Google</button>
 
     </main>
   )
