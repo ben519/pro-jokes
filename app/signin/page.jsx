@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../firebase/firebase'
@@ -80,6 +81,9 @@ export default function SignIn() {
             value={ formData.password }
             onChange={ onChangeHandler }
           />
+        </div>
+        <div>
+          <Link href="/resetpassword">Forgot your password?</Link>
         </div>
 
         {/* display error message if an error exists */}
