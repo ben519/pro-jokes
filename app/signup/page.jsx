@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup } from "firebase/auth";
 import { auth, provider } from '../../firebase/firebase'
 
 
@@ -47,8 +47,18 @@ export default function SignUp() {
         // Clear any existing error messages
         setErrorMsg('');
 
-        // Redirect to home page
-        router.push('/');
+        // Send email verification
+        sendEmailVerification(userCredential.user)
+          .then(() => {
+            // Email verification sent!
+
+            // Redirect to home page
+            router.push('/');
+          })
+          .error((error) => {
+            // Update errorMsg
+            setErrorMsg(error.message);
+          });
       })
       .catch((error) => {
 
