@@ -55,7 +55,7 @@ export default function SignUp() {
             // Redirect to home page
             router.push('/');
           })
-          .error((error) => {
+          .catch((error) => {
             // Update errorMsg
             setErrorMsg(error.message);
           });
