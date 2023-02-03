@@ -1,8 +1,8 @@
 ## About
-This [Next.js 13](https://nextjs.org/) project is designed to teach you how to build a web application with user registration, authentication, and authorization using [Google Firebase](https://firebase.google.com/). Check out [practiceprobs.com/problemsets/nextjs/pro-jokes](https://www.practiceprobs.com/problemsets/nextjs/pro-jokes) for details.
+This [Next.js](https://nextjs.org/) project is designed to teach you how to build a web application with user registration, authentication, and authorization using [Google Firebase](https://firebase.google.com/). Check out [practiceprobs.com/problemsets/nextjs/pro-jokes](https://www.practiceprobs.com/problemsets/nextjs/pro-jokes) for details.
 
 ### Setup
-Each branch this repo represents the solution to a corresponding to a practice problem. You are currently on the _setup_ branch corresponding to [this practice problem »](https://www.practiceprobs.com/problemsets/nextjs/pro-jokes)
+Each branch this repo represents the solution to a corresponding to a practice problem. You are currently on the _firebase-app-setup_ branch corresponding to [this practice problem »](https://www.practiceprobs.com/problemsets/nextjs/pro-jokes/firebase-app-setup)
 
 ---
 
